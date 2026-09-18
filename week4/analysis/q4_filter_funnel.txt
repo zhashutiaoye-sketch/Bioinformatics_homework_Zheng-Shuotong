@@ -1,0 +1,8 @@
+step	kept
+00_all_records	12
+01_FILTER_PASS	10
+02_DP>=20	9
+03_GQ>=30	9
+04_AF<=0.001	6
+05_gene_symbol_present	5
+06_impact_consequence	4

@@ -1,0 +1,44 @@
+Read 12 variant records from ../data/variants_q4.tsv 
+Columns: CHROM, POS, REF, ALT, FILTER, DP, GQ, AF, GENE, CONSEQUENCE, CLINVAR_SIG, CLINVAR_ID, NOTE 
+
+=== filter funnel ===
+                   step kept
+         00_all_records   12
+         01_FILTER_PASS   10
+              02_DP>=20    9
+              03_GQ>=30    9
+           04_AF<=0.001    6
+ 05_gene_symbol_present    5
+  06_impact_consequence    4
+
+=== prioritised shortlist (tier -> ClinVar rank -> AF) ===
+ CHROM      POS REF ALT  GENE             CONSEQUENCE DP GQ      AF
+ chr17  7673803   G   A  TP53 splice_acceptor_variant 80 99 0.00001
+ chr12 25398284   C   A  KRAS        missense_variant 58 91 0.00015
+ chr13 32316461   C   T BRCA2        missense_variant 60 90 0.00010
+ chr19 11200200   C   T  LDLR        missense_variant 40 88 0.00020
+                                  CLINVAR_SIG                      TIER
+                                   Pathogenic tier1_putative_LoF_splice
+ Conflicting_interpretations_of_pathogenicity            tier2_missense
+                       Uncertain_significance            tier2_missense
+                                Likely_benign            tier2_missense
+                                               NOTE
+         Annotated near a canonical splice junction
+                ClinVar conflicting interpretations
+ Rare missense with uncertain clinical significance
+                              ClinVar Likely_benign
+
+=== excluded sites and why ===
+ CHROM       POS  GENE        CONSEQUENCE                         reason
+  chr1 169519049    F5   missense_variant                AF=0.42 > 0.001
+  chr7 117199644  CFTR synonymous_variant consequence=synonymous_variant
+  chr2  47641560  MSH2        stop_gained                 FILTER=LowQual
+  chr6  29942857 HLA-A   missense_variant                    FILTER=FAIL
+  chr8 128750000     . intergenic_variant                 no gene symbol
+ chr11 108323000   ATM   missense_variant                AF=0.18 > 0.001
+  chrX 153870000 MECP2 frameshift_variant                      DP=5 < 20
+  chr4  88000000     .     intron_variant                AF=0.35 > 0.001
+
+NOTE: coordinate/build consistency and ClinVar-ID validity are NOT
+checked by this script; they were audited separately against Ensembl
+(GRCh38 vs GRCh37) and ClinVar before the ranking was accepted.

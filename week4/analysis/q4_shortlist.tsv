@@ -1,0 +1,5 @@
+CHROM	POS	REF	ALT	GENE	CONSEQUENCE	DP	GQ	AF	CLINVAR_SIG	TIER	NOTE
+chr17	7673803	G	A	TP53	splice_acceptor_variant	80	99	1e-05	Pathogenic	tier1_putative_LoF_splice	Annotated near a canonical splice junction
+chr12	25398284	C	A	KRAS	missense_variant	58	91	0.00015	Conflicting_interpretations_of_pathogenicity	tier2_missense	ClinVar conflicting interpretations
+chr13	32316461	C	T	BRCA2	missense_variant	60	90	1e-04	Uncertain_significance	tier2_missense	Rare missense with uncertain clinical significance
+chr19	11200200	C	T	LDLR	missense_variant	40	88	2e-04	Likely_benign	tier2_missense	ClinVar Likely_benign
