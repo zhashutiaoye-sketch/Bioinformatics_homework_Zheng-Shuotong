@@ -1,16 +1,14 @@
 # Week 5 Homework 1 - interpretation (treated versus control)
 
-We compared `treated` with `control` in the 12-sample count matrix using a batch-adjusted
-DESeq2 model (`~ batch + condition`, control as reference, apeglm shrinkage). The strongest QC
-observation was the PCA: PC1 (24 % of variance, R2 = 0.99 with condition) separated the two
-conditions, whereas PC2 (9 %, R2 = 0.49 with batch) separated batch C from batches A/B - evidence
-that batch must be modelled rather than ignored. At padj < 0.05 and |shrunken log2FC| >= 1,
-**60 genes were significant: 36 up and 24 down in treated**. Their coordinated direction across
-all three batches indicates one shared transcriptional program, not scattered noise. Limitation:
-58 of the 88 genes the instructor key marks as truly changed (|truth log2FC| >= 1) stay below the
-detection limit at this sequencing depth, so the 60-gene list is a lower bound. AI drafted the
-script and this text; I ran every command locally, confirmed the coefficient name from
-`resultsNames(dds)`, and verified the estimates against the instructor truth key (Pearson r = 0.88).
+We compared `treated` with `control` using a batch-adjusted DESeq2 model (`~ batch + condition`,
+control as reference, apeglm shrinkage). The strongest QC observation was the PCA: PC1 (24 % of
+variance, R2 = 0.99 with condition) separated the conditions, while PC2 (9 %, R2 = 0.49 with batch)
+separated batch C from A/B, so batch must be modelled. At padj < 0.05 and |shrunken log2FC| >= 1,
+**60 genes were significant: 36 up and 24 down in treated**. Their coordinated direction across all
+three batches suggests one shared transcriptional program rather than scattered noise. Limitation:
+58 of the 88 genes the instructor key marks as truly changed stay below detection at this depth, so
+the list is a lower bound. AI drafted the script and text; I ran it locally, confirmed the
+coefficient name, and checked the estimates against the key (r = 0.88).
 
 ## Headline numbers
 
