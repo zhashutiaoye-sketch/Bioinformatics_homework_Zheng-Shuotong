@@ -94,6 +94,32 @@ a real group-level difference - but it is amplified two- to twenty-fold in one o
 libraries, and the same panel flares up in single libraries of the other groups (DHMR005 in
 DMSO+LIPUS, DHMR023 in T3976+LIPUS), which is why the LIPUS-only and T3976 contrasts are empty.
 
+## 4b. Figures
+
+**Figure 1** - PCA of the 24 libraries (DESeq2 VST, 2,000 most variable genes). PC1 (71.7 %)
+separates the T4400 arms from vehicle and T3976; the two single-sample responders (DHMR005,
+DHMR023) also sit high on PC1.
+
+![PCA of 24 RNA-seq libraries](figures/hw2_pca.png)
+
+**Figure 2** - A: the seven-gene induced panel (samples ordered by group, colour strip = group);
+one library per group - two in T4400 - carries an amplified version of the program. B: the 30 most
+variable genes with samples clustered by Spearman correlation; library size in brackets.
+
+![Induced panel and most variable genes](figures/hw2_panel_heatmap.png)
+
+**Figure 3** - Library size per sample; six libraries are at about half depth (dashed line 25 M).
+
+![Library sizes](figures/hw2_libsize.png)
+
+**Figure 4** - The app's own figures from the one-click RNA-seq run (DMSO vs T4400): PCA scatter,
+volcano plot, top-variance heatmap and sample-correlation matrix.
+
+![app PCA scatter](figures/emp_01_pca_scatter.png)
+![app volcano](figures/emp_03_volcano.png)
+![app top-variance heatmap](figures/emp_05_heatmap_topvar.png)
+![app sample correlation](figures/emp_06_sample_correlation.png)
+
 ## 5. Verification of the app's output (independent checks)
 
 | Check | Result |
