@@ -1,0 +1,105 @@
+Working directory: D:/大三课件/生信/week5 
+DESeq2: 1.46.0 | apeglm: 1.28.0 | R: R version 4.4.3 (2025-02-28 ucrt) 
+
+Count matrix : 1000 genes x 12 samples
+Metadata     : 12 samples x 2 variables
+
+--- verification ---
+samples identical to metadata row names, same order : TRUE
+all counts non-negative integers                  : TRUE
+duplicated sample IDs                             :  0 
+condition levels (reference first)                :  control, treated 
+batch levels                                      :  A, B, C 
+library sizes (M reads)                           :  0.122, 0.128, 0.132, 0.135, 0.139, 0.143, 0.152, 0.151, 0.113, 0.113, 0.12, 0.123 
+design balance (batch x condition):
+   
+    control treated
+  A       2       2
+  B       2       2
+  C       2       2
+
+model matrix columns : (Intercept), batchB, batchC, conditiontreated 
+model matrix rank    : 4 of 4 columns -> FULL RANK 
+
+filter rule          : rowSums(counts >= 10) >= 3
+genes before filtering: 1000 
+genes after filtering : 989 
+
+estimating size factors
+estimating dispersions
+gene-wise dispersion estimates
+mean-dispersion relationship
+final dispersion estimates
+fitting model and testing
+resultsNames(dds):
+[1] "Intercept"                    "batch_B_vs_A"                
+[3] "batch_C_vs_A"                 "condition_treated_vs_control"
+
+confirmed coefficient: condition_treated_vs_control -> treated versus control (positive = up in treated) 
+
+using 'apeglm' for LFC shrinkage. If used in published research, please cite:
+    Zhu, A., Ibrahim, J.G., Love, M.I. (2018) Heavy-tailed prior distributions for
+    sequence count data: removing the noise and preserving large differences.
+    Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895
+thresholds      : padj < 0.05  AND  |shrunken log2FC| >= 1
+genes tested (non-NA padj) : 989 of 989 
+padj < 0.05 only           : 83 
+significant (padj + effect): 60  (up in treated: 36 , down in treated: 24 )
+complete table written to week5_deseq2_results.csv ( 989  rows )
+
+using ntop=500 top features by variance
+variance explained by the design (R^2 of lm on each PC):
+  PC1: condition 0.99 | batch 0.00
+  PC2: condition 0.00 | batch 0.49
+
+saved: week5_deseq2_object.rds, session_info.txt
+
+estimating size factors
+estimating dispersions
+gene-wise dispersion estimates
+mean-dispersion relationship
+final dispersion estimates
+fitting model and testing
+using 'apeglm' for LFC shrinkage. If used in published research, please cite:
+    Zhu, A., Ibrahim, J.G., Love, M.I. (2018) Heavy-tailed prior distributions for
+    sequence count data: removing the noise and preserving large differences.
+    Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895
+Week 5 supporting verification - Week5_Homework_Gene_Annotation_Instructor_Key.csv
+generated: 2026-09-22 19:01:44
+
+A. Effect of including batch in the design (~ batch + condition vs ~ condition)
+   significant genes (~ batch + condition): 60   [padj<0.05 and |shrunken log2FC|>=1]
+   significant genes (~ condition only)    : 59
+   padj<0.05 only      (~ batch + condition): 83
+   padj<0.05 only      (~ condition only)  : 81
+
+B. Shrunken vs unshrunken effect-size threshold
+   significant with apeglm-shrunken log2FC : 60
+   significant with unshrunken log2FC      : 74
+
+C. Agreement with the instructor truth log2 fold changes (all 
+989
+ genes)
+   Pearson  r = 0.8802
+   Spearman r = 0.5138
+   mean |estimate - truth| = 0.1416 log2 units
+   truth-defined DE genes (|truth log2FC| >= 1): 88
+   of those recovered by the pipeline          : 58
+   called significant but not truth-DE         : 2
+
+Note: the key is an instructor file shipped with the weekly folder; it is used
+here only as an independent check on the estimates, never as model input. 
+
+=== numbers for the 100-150 word interpretation ===
+comparison        : condition treated vs control (batch-adjusted)
+PC1 / PC2 variance: 24 % / 9 %
+significant genes : 60 ( 36 up, 24 down )
+top 5 significant genes:
+   gene_id log2FoldChange         padj
+1 Gene0035       1.737083 1.310727e-10
+2 Gene0043       1.641807 1.045060e-09
+3 Gene0008       1.933372 1.083462e-09
+4 Gene0014       1.734539 4.762226e-09
+5 Gene0054       1.621094 4.762226e-09
+
+DONE

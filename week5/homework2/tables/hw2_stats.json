@@ -1,0 +1,293 @@
+{
+  "n_samples": 24,
+  "n_genes_raw": 24394,
+  "groups": {
+    "DMSO": 4,
+    "DMSO+LIPUS": 4,
+    "T4400": 4,
+    "T4400+LIPUS": 4,
+    "T3976": 4,
+    "T3976+LIPUS": 4
+  },
+  "library_size_min": 20538855,
+  "library_size_max": 40391543,
+  "half_depth_samples": [
+    "DHMR001",
+    "DHMR006",
+    "DHMR016",
+    "DHMR018",
+    "DHMR019",
+    "DHMR021"
+  ],
+  "panel_score_by_sample": {
+    "DHMR001": -1.6,
+    "DHMR002": 1.84,
+    "DHMR003": 0.2,
+    "DHMR004": -0.24,
+    "DHMR005": 5.62,
+    "DHMR006": -1.46,
+    "DHMR007": -0.38,
+    "DHMR008": 0.3,
+    "DHMR009": -2.56,
+    "DHMR010": -1.73,
+    "DHMR011": 0.96,
+    "DHMR012": 0.77,
+    "DHMR013": -3.08,
+    "DHMR014": -2.53,
+    "DHMR015": 0.95,
+    "DHMR016": 0.87,
+    "DHMR017": 0.12,
+    "DHMR018": -1.26,
+    "DHMR019": -0.03,
+    "DHMR020": 0.58,
+    "DHMR021": -2.08,
+    "DHMR022": 0.22,
+    "DHMR023": 5.34,
+    "DHMR024": -0.32
+  },
+  "single_responder_samples": [
+    "DHMR002",
+    "DHMR005",
+    "DHMR023"
+  ],
+  "app_deg_list_check": {
+    "bundle_table": "tables/04_deg_list.csv",
+    "rows_in_bundle_table": 1395,
+    "rows_passing_padj_lt_0.05_and_abs_lfc_ge_1": 238,
+    "explanation": "rows with padj = NA (dropped by DESeq2 independent filtering) are carried into the app's DEG list"
+  },
+  "panel": {
+    "Saa3": {
+      "group_mean_counts": {
+        "DMSO": 1275.2,
+        "DMSO+LIPUS": 8998.2,
+        "T4400": 18968.5,
+        "T4400+LIPUS": 18205.8,
+        "T3976": 551.8,
+        "T3976+LIPUS": 7876.8
+      },
+      "max_single_sample_share": 0.16
+    },
+    "Lcn2": {
+      "group_mean_counts": {
+        "DMSO": 88.5,
+        "DMSO+LIPUS": 511.0,
+        "T4400": 1082.5,
+        "T4400+LIPUS": 1032.0,
+        "T3976": 81.5,
+        "T3976+LIPUS": 497.8
+      },
+      "max_single_sample_share": 0.155
+    },
+    "Mmp13": {
+      "group_mean_counts": {
+        "DMSO": 3.2,
+        "DMSO+LIPUS": 65.8,
+        "T4400": 126.5,
+        "T4400+LIPUS": 121.0,
+        "T3976": 2.8,
+        "T3976+LIPUS": 52.8
+      },
+      "max_single_sample_share": 0.171
+    },
+    "Ccl3": {
+      "group_mean_counts": {
+        "DMSO": 1.8,
+        "DMSO+LIPUS": 31.5,
+        "T4400": 66.5,
+        "T4400+LIPUS": 63.0,
+        "T3976": 0.2,
+        "T3976+LIPUS": 26.0
+      },
+      "max_single_sample_share": 0.177
+    },
+    "Kng1": {
+      "group_mean_counts": {
+        "DMSO": 21.5,
+        "DMSO+LIPUS": 229.0,
+        "T4400": 472.5,
+        "T4400+LIPUS": 453.8,
+        "T3976": 10.5,
+        "T3976+LIPUS": 218.8
+      },
+      "max_single_sample_share": 0.159
+    },
+    "Try5": {
+      "group_mean_counts": {
+        "DMSO": 9.0,
+        "DMSO+LIPUS": 163.8,
+        "T4400": 304.0,
+        "T4400+LIPUS": 347.8,
+        "T3976": 3.8,
+        "T3976+LIPUS": 148.0
+      },
+      "max_single_sample_share": 0.182
+    },
+    "Clec4e": {
+      "group_mean_counts": {
+        "DMSO": 1.0,
+        "DMSO+LIPUS": 18.5,
+        "T4400": 34.5,
+        "T4400+LIPUS": 36.8,
+        "T3976": 1.0,
+        "T3976+LIPUS": 16.0
+      },
+      "max_single_sample_share": 0.169
+    },
+    "Il1b": {
+      "group_mean_counts": {
+        "DMSO": 114.2,
+        "DMSO+LIPUS": 149.2,
+        "T4400": 141.2,
+        "T4400+LIPUS": 156.8,
+        "T3976": 70.2,
+        "T3976+LIPUS": 140.8
+      },
+      "max_single_sample_share": 0.067
+    }
+  },
+  "contrasts": [
+    {
+      "ref": "DMSO",
+      "test": "T4400",
+      "n_tested": 16757,
+      "n_deg": 238,
+      "n_up": 172,
+      "n_down": 66,
+      "top": [
+        {
+          "gene": "Mmp13",
+          "log2FC": 5.23,
+          "padj": 0.00379589600104752
+        },
+        {
+          "gene": "Ccl3",
+          "log2FC": 5.12,
+          "padj": 2.31392629166504e-05
+        },
+        {
+          "gene": "Try5",
+          "log2FC": 5.05,
+          "padj": 0.00417222805321904
+        },
+        {
+          "gene": "Clec4e",
+          "log2FC": 4.88,
+          "padj": 0.00178025617897559
+        },
+        {
+          "gene": "Kng1",
+          "log2FC": 4.4,
+          "padj": 0.00220750822482042
+        },
+        {
+          "gene": "Saa3",
+          "log2FC": 3.87,
+          "padj": 0.014307843302983
+        },
+        {
+          "gene": "Hp",
+          "log2FC": 3.71,
+          "padj": 0.00804379804143452
+        },
+        {
+          "gene": "Car6",
+          "log2FC": 3.51,
+          "padj": 0.00456175389779171
+        },
+        {
+          "gene": "Lcn2",
+          "log2FC": 3.51,
+          "padj": 0.00200749976222763
+        },
+        {
+          "gene": "Tnxb",
+          "log2FC": 3.4,
+          "padj": 0.00631563337185171
+        },
+        {
+          "gene": "Serpinb2",
+          "log2FC": 3.4,
+          "padj": 0.00124141447767656
+        },
+        {
+          "gene": "S100a8",
+          "log2FC": 3.31,
+          "padj": 0.00417222805321904
+        }
+      ]
+    },
+    {
+      "ref": "DMSO",
+      "test": "T3976",
+      "n_tested": 16606,
+      "n_deg": 1,
+      "n_up": 0,
+      "n_down": 1,
+      "top": [
+        {
+          "gene": "Krt19",
+          "log2FC": -1.22,
+          "padj": 0.0421
+        }
+      ]
+    },
+    {
+      "ref": "DMSO",
+      "test": "DMSO+LIPUS",
+      "n_tested": 16630,
+      "n_deg": 0,
+      "n_up": 0,
+      "n_down": 0,
+      "top": []
+    },
+    {
+      "ref": "T4400",
+      "test": "T4400+LIPUS",
+      "n_tested": 16730,
+      "n_deg": 0,
+      "n_up": 0,
+      "n_down": 0,
+      "top": []
+    },
+    {
+      "ref": "T3976",
+      "test": "T3976+LIPUS",
+      "n_tested": 16584,
+      "n_deg": 4,
+      "n_up": 4,
+      "n_down": 0,
+      "top": [
+        {
+          "gene": "Kif26a",
+          "log2FC": 1.84,
+          "padj": 0.0096
+        },
+        {
+          "gene": "3632451O06Rik",
+          "log2FC": 1.47,
+          "padj": 0.0495
+        },
+        {
+          "gene": "Fxyd6",
+          "log2FC": 1.08,
+          "padj": 0.0005
+        },
+        {
+          "gene": "Tcap",
+          "log2FC": 1.0,
+          "padj": 0.0016
+        }
+      ]
+    },
+    {
+      "ref": "DMSO+LIPUS",
+      "test": "T4400+LIPUS",
+      "n_tested": 16730,
+      "n_deg": 0,
+      "n_up": 0,
+      "n_down": 0,
+      "top": []
+    }
+  ]
+}

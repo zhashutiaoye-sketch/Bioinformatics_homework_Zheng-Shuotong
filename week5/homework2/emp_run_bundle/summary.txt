@@ -1,0 +1,12 @@
+EasyMultiProfiler RNAseq one-click run
+Experiment: rnaseq_week5
+Started:    2026-09-22 18:57:29
+
+[18:57:34] PCA + scatter                                4.38s  ok
+[18:57:56] DESeq2 diff                                 22.02s  ok | n=16757
+[18:57:58] Volcano                                      1.94s  ok
+[18:57:58] DEG heatmap                                  0.26s  ok | failed
+[18:57:59] Top-var heatmap                              0.93s  ok
+[18:58:00] Sample correlation                           0.80s  ok
+[18:58:00] KEGG enrichment                              0.07s  ok | err: OrgDb package 'org.Mm.eg.db' for organism 'mmu' is not installed. Install with: BiocManager::install("org.Mm.eg.db")
+[18:58:00] GO enrichment                                0.01s  ok | err: OrgDb package 'org.Mm.eg.db' for organism 'mmu' is not installed. Install with: BiocManager::install("org.Mm.eg.db")
