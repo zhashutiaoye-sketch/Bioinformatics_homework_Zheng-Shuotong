@@ -1,5 +1,5 @@
 Week 5 supporting verification - Week5_Homework_Gene_Annotation_Instructor_Key.csv
-generated: 2026-09-22 19:01:44
+generated: 2026-09-22 19:29:30
 
 A. Effect of including batch in the design (~ batch + condition vs ~ condition)
    significant genes (~ batch + condition): 60   [padj<0.05 and |shrunken log2FC|>=1]
@@ -11,9 +11,7 @@ B. Shrunken vs unshrunken effect-size threshold
    significant with apeglm-shrunken log2FC : 60
    significant with unshrunken log2FC      : 74
 
-C. Agreement with the instructor truth log2 fold changes (all 
-989
- genes)
+C. Agreement with the instructor truth log2 fold changes (all 989 genes)
    Pearson  r = 0.8802
    Spearman r = 0.5138
    mean |estimate - truth| = 0.1416 log2 units
