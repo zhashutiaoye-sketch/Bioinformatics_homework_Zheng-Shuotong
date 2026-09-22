@@ -2,7 +2,9 @@
 
 Student: 郑烁曈 (SUAT24000155)
 
-## Homework 1 - from verified counts to an interpretable DESeq2 result
+## Homework 1 - `homework1/`
+
+From verified counts to an interpretable DESeq2 result.
 
 | File | What it is |
 |---|---|
@@ -21,15 +23,20 @@ Headline result: `~ batch + condition`, control as reference, apeglm shrinkage -
 **60 genes significant (36 up / 24 down in treated)** at padj < 0.05 and |shrunken log2FC| >= 1;
 estimates agree with the instructor truth key at Pearson r = 0.88.
 
-## Homework 2 - complete RNA-seq analysis with EasyMultiProfiler-Web
+The script reads the input CSVs from this folder or from the parent course folder.
 
-`homework2/` contains the report (`Week5_Homework_2_report.md` + `.pdf`), the figures produced by
-the app and by an independent base-R re-analysis (`figures/`), the exported tables
-(`tables/`, `emp_run_bundle/`) and the scripts that were run (`run_contrasts.py`,
-`verify_contrasts.py`, `hw2_stats.py`, `hw2_figures.R`).
+## Homework 2 - `homework2/`
 
-Dataset: `EasyMultiProfiler-Web/tests/RNAseq_output.csv` + `RNAseq_mapping.csv`
-(24 mouse libraries, 24,394 genes, 6 groups x 4: DMSO / T4400 / T3976 each +/- LIPUS).
+Complete RNA-seq analysis of `EasyMultiProfiler-Web/tests/RNAseq_output.csv` +
+`RNAseq_mapping.csv` (24 mouse libraries, 24,394 genes, 6 groups x 4:
+DMSO / T4400 / T3976 each +/- LIPUS) through the EasyMultiProfiler-Web app.
+
+- `Week5_Homework_2_report.md` / `.pdf` - full report (11 pages, 7 figures)
+- `figures/` - the app's own plots (`emp_*`) and an independent base-R re-analysis
+  (`hw2_pca.png`, `hw2_panel_heatmap.png`, `hw2_libsize.png`)
+- `tables/` - the five extra DESeq2 contrasts, sample QC, panel counts, PCA scores
+- `emp_run_bundle/` - the app's one-click run bundle (plots, tables, log)
+- `run_contrasts.py`, `verify_contrasts.py`, `hw2_stats.py`, `hw2_figures.R` - the scripts that were run
 
 Headline results: DMSO vs T4400 = 238 genes (172 up / 66 down); DMSO vs T3976 = 1;
 DMSO vs DMSO+LIPUS = 0; T4400 vs T4400+LIPUS = 0; T3976 vs T3976+LIPUS = 4. The T4400 arm shows
@@ -37,7 +44,7 @@ an innate-immune / acute-phase + ECM-remodelling program (`Saa3`, `Lcn2`, `Ccl3`
 `Try5`, `Clec4e`, `Il1a`, `Cxcl10`, `Serpin*`), with one library per group carrying an amplified
 version of the same program - the main QC caveat of this dataset.
 
-## Teacher-provided inputs (unchanged)
+## Teacher-provided inputs (unchanged, kept in this folder)
 
 `Week5_Homework_1_Instructions.md`, `Week5_Homework_2_Instruction.md`,
 `Week5_Homework_Verification_Checklist.md`, `Week5_Homework_Starter.R`,

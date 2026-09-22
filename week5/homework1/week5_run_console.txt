@@ -1,4 +1,4 @@
-Working directory: D:/大三课件/生信/week5 
+Working directory: D:/大三课件/生信/week5/homework1 
 DESeq2: 1.46.0 | apeglm: 1.28.0 | R: R version 4.4.3 (2025-02-28 ucrt) 
 
 Count matrix : 1000 genes x 12 samples
@@ -65,7 +65,7 @@ using 'apeglm' for LFC shrinkage. If used in published research, please cite:
     sequence count data: removing the noise and preserving large differences.
     Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895
 Week 5 supporting verification - Week5_Homework_Gene_Annotation_Instructor_Key.csv
-generated: 2026-09-22 19:29:30
+generated: 2026-09-22 20:15:27
 
 A. Effect of including batch in the design (~ batch + condition vs ~ condition)
    significant genes (~ batch + condition): 60   [padj<0.05 and |shrunken log2FC|>=1]

@@ -1,5 +1,5 @@
 Week 5 supporting verification - Week5_Homework_Gene_Annotation_Instructor_Key.csv
-generated: 2026-09-22 19:29:30
+generated: 2026-09-22 20:15:27
 
 A. Effect of including batch in the design (~ batch + condition vs ~ condition)
    significant genes (~ batch + condition): 60   [padj<0.05 and |shrunken log2FC|>=1]

@@ -46,8 +46,15 @@ cat("DESeq2:", as.character(packageVersion("DESeq2")),
     "| apeglm:", as.character(packageVersion("apeglm")),
     "| R:", R.version.string, "\n\n")
 
-count_file    <- "Week5_Homework_Count_Matrix.csv"
-metadata_file <- "Week5_Homework_Sample_Metadata.csv"
+# Inputs stay in the course folder one level up; the deliverables are written here.
+resolve_input <- function(name) {
+  if (file.exists(name)) return(name)
+  up <- file.path("..", name)
+  if (file.exists(up)) return(up)
+  stop(sprintf("Input file not found: %s (also tried %s)", name, up))
+}
+count_file    <- resolve_input("Week5_Homework_Count_Matrix.csv")
+metadata_file <- resolve_input("Week5_Homework_Sample_Metadata.csv")
 
 # ---------------------------------------------------------------
 # 1. Import (counts stay as raw integers - no TPM/CPM/z-score)
@@ -253,7 +260,7 @@ nb_sig_padj <- sum(!is.na(nb_shrunk$padj) & nb_shrunk$padj < 0.05)
 
 unshrunk_sig <- sum(!is.na(res$padj) & res$padj < 0.05 & abs(res$log2FoldChange) >= 1)
 
-key <- read.csv("Week5_Homework_Gene_Annotation_Instructor_Key.csv",
+key <- read.csv(resolve_input("Week5_Homework_Gene_Annotation_Instructor_Key.csv"),
                 stringsAsFactors = FALSE)
 key$truth <- as.numeric(key$truth_log2FC_for_instructor)
 cmp <- merge(res_df, key[, c("gene_id", "truth")], by = "gene_id")

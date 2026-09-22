@@ -23,7 +23,7 @@ Student: 郑烁曈 (SUAT24000155)  |  File: `week5_deseq2_analysis.R`  |  Date: 
 | Figures | `week5_pca.png`, `week5_de_plot.png` (both inspected visually before submission) |
 | Interpretation (`week5_interpretation.md`) | drafted by AI, numbers cross-checked against the console output |
 
-Reproduce with:
+Reproduce with (the script finds the three input CSVs in this folder or one level up):
 
 ```bash
 R_LIBS_USER="D:/R/R-userlib" Rscript week5_deseq2_analysis.R
