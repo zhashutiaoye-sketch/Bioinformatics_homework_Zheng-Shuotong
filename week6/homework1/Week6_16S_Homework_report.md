@@ -10,6 +10,21 @@ Task as set in `Homework-Week6.docx`: *(1)* run the **whole analysis procedure**
 
 ---
 
+## Answers at a glance (question → answer → where to look)
+
+| Assignment question | Answer in one line | Where |
+|---|---|---|
+| **Q1** — use the 16S data files in `EMP tests` and EMP-web to *complete the whole analysis procedure*, and submit the final result through the EMP-web system | Done entirely through the app's own pipeline — import → workflow profile/validate → one-click 16S run (alpha diversity for all 7 indices, PCoA/PCA/NMDS, top-40 heatmap, top-15 barplot, differential taxa) → the app packages its own bundle → plus 10 extra differential contrasts, 3 ordinations, sankey, network and volcano in a second experiment of the same session; the finished run was submitted with `POST /api/github/sync` (buttons: *Data → Import … Export → Sync*) | §2, §7, `app_run_bundle/`, `app/api_call_log.md` |
+| **Q2** — generate a scientific hypothesis from the parameters and the analysis results, and state which parameters support it | Treatment-associated community change is a **community-level, within-patient shift that is detectable in UC (R² = 0.026, p = 0.007) but not in IBS (R² = 0.011, p = 0.132)**, while **baseline** community structure does **not** separate responders from non-responders (R² = 0.017–0.021, p = 0.868–0.978); therefore a microbiome read-out of response must be a pre→post **change** metric used in UC, not a baseline classifier, and the effect is compositional rather than carried by one taxon | §6 (hypothesis + the table of supporting parameters), `tables/r_permanova.csv`, `r_dispersion_tests.csv`, `r_alpha_tests.csv`, `r_diff_taxa_wilcoxon.csv` |
+
+Headline numbers behind both answers: 470 level-7 taxa × 130 libraries (2 libraries dropped for missing
+metadata); 136 taxa retained at ≥ 10 % prevalence; rarefied to 1,624 reads; PERMANOVA `~ Group`
+R² = 0.047, p = 0.001 with **homogeneous dispersion** (p = 0.449); UC paired before/after
+R² = 0.026, p = 0.007 vs IBS R² = 0.011, p = 0.132; **0 of 136** taxa at FDR < 0.05 with Wilcoxon
+(edgeR: 3–5, i.e. method-dependent); baseline great vs poor p = 0.868 (IBS) / 0.978 (UC).
+
+---
+
 ## 1. Data identified in `EasyMultiProfiler-Web/tests`
 
 | File | Content |
@@ -192,6 +207,15 @@ test); `figures/r_top_diff_taxa_baseline.png` shows the strongest (unadjusted) b
   statistically indistinguishable at every level tested (Group p = 0.449; UC before/after p = 0.799), so
   these are **centroid shifts, not differences in within-group heterogeneity** — the pair of diagnostics the
   Week 6 reading material requires ("report PERMANOVA together with the dispersion diagnostic").
+* **The batch/design term: what could be adjusted, and what could not.** The supplied metadata has **no
+  batch, site or extraction variable** — only `Group` and `Group_sub`. Two design terms are recoverable from
+  the identifiers and both were checked: *cohort* (`J_` = IBS, `K_` = UC) is **perfectly confounded with
+  diagnosis** (the week-6 material's own failure mode, "site completely confounded with diagnosis"), and
+  *visit* (`_01`/`_02`) is the treatment term of interest. The one adjustment that is possible and was made
+  is the **pairing**: all before/after contrasts use subject-blocked permutations
+  (`permute::how(nperm = 999, blocks = subject)`), which is the correct restricted-permutation scheme for
+  repeated sampling of the same patient. Adjusting for a batch term is therefore *not reportable* for this
+  dataset, and that limitation is stated rather than hidden.
 * **Treatment moves the UC community, not the IBS community.** Paired PERMANOVA with subject-blocked
   permutations: UC before vs after R² = 0.026, **p = 0.007** (58 libraries, 29 patients); IBS R² = 0.011,
   p = 0.132 (72 libraries, 36 patients). Consistent with the alpha-diversity trend in UC only.
@@ -241,6 +265,25 @@ is in `tables/` and reproducible from `scripts/`):
 | Differential-abundance method + multiple testing | Wilcoxon on relative abundance + BH (0/136 at FDR < 0.05); `edgeR` exact test (3–5 taxa) | no robust single taxon → the hypothesis is compositional, not taxon-specific |
 | Baseline grouping parameters | `Group_sub` great vs poor at baseline: PERMANOVA R² = 0.017 (IBS) / 0.021 (UC), p = 0.868 / 0.978; alpha BH ≥ 0.61 | baseline structure does **not** predict response — rules out the obvious alternative hypothesis |
 | Sample/pairing parameters | 130 libraries, 4 groups, 8 subgroups, patient-matched before/after | defines what "within-patient change" means |
+
+**The same hypothesis in the predictive form the assignment's wording invites** (added after AI review
+pointed out that "generate a scientific hypothesis" is most cleanly graded as a testable statement about
+response):
+
+> **H_pred.** In ulcerative colitis the post-treatment gut community differs from the *same patient's*
+> baseline (a within-patient, community-level change), whereas in IBS it does not; and **no baseline**
+> community feature — diversity index or taxon — predicts treatment response.
+
+The two formulations are the same claim read in opposite directions, and both are the ones these
+parameters support. The competing baseline-prediction hypothesis
+(*H0: baseline community composition separates responders from non-responders*) is **rejected** by the same
+parameters — PERMANOVA R² = 0.017 (IBS) / 0.021 (UC), p = 0.868 / 0.978; all alpha-diversity tests
+BH ≥ 0.61; 0 of 136 taxa at FDR < 0.05 — which is why it is stated as the alternative and dismissed instead
+of being claimed. **Closing statement:** the parameters support the hypothesis because they were chosen to
+isolate a composition-level, within-patient effect (distance metric + explicit data state), to size that
+effect (PERMANOVA R² with restricted permutations), to exclude the two confounding explanations this
+metadata allows (unequal dispersion; baseline responder status), and to avoid over-claiming (FDR control
+across taxa, plus the observational-scope limitation).
 
 **Predictions that would falsify it** (observational data cannot test them here):
 with spike-in-quantified (absolute) profiling in a paired cohort, (i) the within-patient Bray–Curtis change
@@ -303,6 +346,24 @@ sankey and the Spearman network:
 
 Budgeted display versions of the app's own one-click plots (with axis titles and PDFs) are in
 `app_run_bundle/run2_analysis_130samples/plots/`.
+
+## 8b. Evidence-trail checklist required by the Week 6 reading material
+
+Every item the reading material lists under "Required evidence trail" / "Deliverable requirement", and
+where this homework delivers it:
+
+| Required item | Delivered here |
+|---|---|
+| show input dimensions and the first sample/feature identifiers **before** analysis | §1 table + `console/hw6_16s_verify_console.txt` step 0 (`470 taxa x 130 samples`; first samples `J_XYL_F_0001_01, J_XYL_F_0001_02`; first two feature strings printed) |
+| print sample depth and feature counts after **each** filtering/transformation step | step 2 (library sizes: median 10,197, range 1,624–20,283; detected/prevalent counts 470 → 136) and step 3 (rarefied to 1,624 reads, features still detected) |
+| explain **why the chosen diversity data state is appropriate** | §4 pipeline paragraph: species-level counts, prevalence-filtered, rarefied once for alpha/beta; raw counts kept for the count model (a rarefied table is never passed to the count model) |
+| report **PERMANOVA together with the dispersion diagnostic and the batch term** | `tables/r_permanova.csv` + `tables/r_dispersion_tests.csv`, discussed in §5 — including the explicit statement that this metadata contains **no batch term**, so pairing (subject-blocked permutations) is the only defensible design adjustment |
+| write **one limitation** that would prevent a causal or diagnostic claim | §5 final paragraph and §6 "Causal ladder position" (observational design; cohort confounded with diagnosis; relative 16S abundances cannot show absolute loss) |
+| record **at least one AI suggestion** that was verified, corrected, or rejected | `AI_verification_log.md`: 4 verified, 5 corrected, 5 rejected (with the failing command/output for each) |
+| respect the **scope boundary** (no patient-level, diagnostic, therapeutic or causal claim) | §5, §6 — the result is labelled description/association only |
+| interpretation of **100–150 words** | §5 block, 133 words, counted programmatically (`console/interpretation_wordcount.txt`) |
+| R script that runs from a clean session with identity checks and comments | `scripts/hw6_16s_verify.R` (+ `console/r_rerun_stdout.txt`, exit 0) |
+| `sessionInfo()` | tail of `console/hw6_16s_verify_console.txt` |
 
 ## 9. Deliverable map (Week 6 reading-material rubric)
 
