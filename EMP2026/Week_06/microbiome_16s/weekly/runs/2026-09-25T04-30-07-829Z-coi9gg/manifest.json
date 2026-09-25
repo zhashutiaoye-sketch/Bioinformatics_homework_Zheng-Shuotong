@@ -1,0 +1,84 @@
+{
+  "course_code": "EMP2026",
+  "emp_version": "9.0.4",
+  "layout": "week_first",
+  "week_dir": "Week_06",
+  "track_id": "microbiome_16s",
+  "track_key": "microbiome_16s",
+  "track_title": "16S 微生物组",
+  "assignment_type": "weekly",
+  "assignment_id": "week_06",
+  "assignment_title": "第6周",
+  "week": 6,
+  "type": "weekly",
+  "case_id": "course_microbiome_16s",
+  "task_ids": [],
+  "student_id": "SUAT24000155",
+  "display_name": "郑烁曈",
+  "github_login": "zhashutiaoye-sketch",
+  "github_repo": "zhashutiaoye-sketch/Bioinformatics_homework_Zheng-Shuotong",
+  "github_branch": "main",
+  "git_path": "EMP2026/Week_06/microbiome_16s/weekly/runs/2026-09-25T04-30-07-829Z-coi9gg",
+  "session_id": "jlRMRNfHbzrDVVBk2MC7gUBf",
+  "experiment": "genus_full",
+  "run_id": "2026-09-25T04-30-07-829Z-coi9gg",
+  "synced_at": "2026-09-25T04:30:07Z",
+  "include_rds": false,
+  "session_manifest": {
+    "session_id": "jlRMRNfHbzrDVVBk2MC7gUBf",
+    "imports": [
+      {
+        "experiment": "microbiome16s",
+        "data_type": "tax",
+        "input_files": {
+          "data": {
+            "path": "C:/emp_hw6/inputs/16S_level-7_mapped130.csv",
+            "size": 179824,
+            "sha256": "3856c4524ca100e87237cbdc320ca0fde753f2cce4f2ed3c304682569df89863",
+            "rows_estimate": 411,
+            "rows_previewed": 100,
+            "columns": 131,
+            "orientation": "features_in_rows"
+          },
+          "metadata": {
+            "path": "C:/emp_hw6/inputs/16S_mapping.csv",
+            "size": 5566,
+            "sha256": "3983f3edddea76f728a92808b9a0c2f6de64511c37c46322949af32a6979b00c",
+            "rows_estimate": 133,
+            "rows_previewed": 130,
+            "columns": 3,
+            "sample_id_column": "SampleID"
+          }
+        },
+        "imported_at": "2026-09-25T12:12:22.290+0800"
+      },
+      {
+        "experiment": "genus_full",
+        "data_type": "tax",
+        "input_files": {
+          "data": {
+            "path": "C:/emp_hw6/inputs/16S_level-7_mapped130.csv",
+            "size": 179824,
+            "sha256": "3856c4524ca100e87237cbdc320ca0fde753f2cce4f2ed3c304682569df89863",
+            "rows_estimate": 411,
+            "rows_previewed": 100,
+            "columns": 131,
+            "orientation": "features_in_rows"
+          },
+          "metadata": {
+            "path": "C:/emp_hw6/inputs/16S_mapping.csv",
+            "size": 5566,
+            "sha256": "3983f3edddea76f728a92808b9a0c2f6de64511c37c46322949af32a6979b00c",
+            "rows_estimate": 133,
+            "rows_previewed": 130,
+            "columns": 3,
+            "sample_id_column": "SampleID"
+          }
+        },
+        "imported_at": "2026-09-25T12:13:49.754+0800"
+      }
+    ],
+    "created_at": "2026-09-25T12:12:22.290+0800",
+    "updated_at": "2026-09-25T12:13:49.754+0800"
+  }
+}
