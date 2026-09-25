@@ -1,0 +1,22 @@
+"metric","comparison","median_a","median_b","n_a","n_b","p","p_bh"
+"observed","IBS_before_great vs IBS_before_poor",47.5,48,18,18,0.1785,0.6219
+"shannon","IBS_before_great vs IBS_before_poor",3.094,3.065,18,18,0.8391,0.8391
+"chao1","IBS_before_great vs IBS_before_poor",49.75,50.583,18,18,0.2612,0.6932
+"observed","UC_before_great vs UC_before_poor",38.5,49,16,13,0.3232,0.6219
+"shannon","UC_before_great vs UC_before_poor",2.8,2.86,16,13,0.3513,0.6148
+"chao1","UC_before_great vs UC_before_poor",40,50,16,13,0.417,0.7298
+"observed","IBS_after_great vs IBS_after_poor",47,52,18,18,0.1832,0.6219
+"shannon","IBS_after_great vs IBS_after_poor",3.009,2.956,18,18,0.6279,0.8256
+"chao1","IBS_after_great vs IBS_after_poor",48.25,55.167,18,18,0.06417,0.4492
+"observed","UC_after_great vs UC_after_poor",44.5,43,16,13,0.8953,0.991
+"shannon","UC_after_great vs UC_after_poor",2.245,2.527,16,13,0.1006,0.3522
+"chao1","UC_after_great vs UC_after_poor",48.375,44.2,16,13,0.965,0.965
+"observed","IBS_before vs IBS_after",47.5,50,36,36,0.991,0.991
+"shannon","IBS_before vs IBS_after",3.065,3.009,36,36,0.7076,0.8256
+"chao1","IBS_before vs IBS_after",50,52.5,36,36,0.8481,0.965
+"observed","UC_before vs UC_after",44,43,29,29,0.7204,0.991
+"shannon","UC_before vs UC_after",2.86,2.391,29,29,0.05534,0.3522
+"chao1","UC_before vs UC_after",44.5,46,29,29,0.8887,0.965
+"observed","IBS_before vs UC_before",47.5,44,36,29,0.3554,0.6219
+"shannon","IBS_before vs UC_before",3.065,2.86,36,29,0.2725,0.6148
+"chao1","IBS_before vs UC_before",50,44.5,36,29,0.2971,0.6932

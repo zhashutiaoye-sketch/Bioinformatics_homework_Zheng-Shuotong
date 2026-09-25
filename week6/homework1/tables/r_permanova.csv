@@ -1,0 +1,11 @@
+"comparison","n","R2","p"
+"Group (4 levels, all 130 samples)",130,0.0466,0.001
+"Group adjusted for response",130,0.0527,0.002
+"Group_sub (8 levels)",130,0.0704,0.024
+"baseline only: IBS_before vs UC_before",65,0.0264,0.047
+"baseline IBS: great vs poor",36,0.0173,0.868
+"baseline UC: great vs poor",29,0.0209,0.978
+"post-treatment IBS: great vs poor",36,0.0198,0.841
+"post-treatment UC: great vs poor",29,0.044,0.244
+"IBS before vs after (paired, strata=subject)",72,0.0114,0.132
+"UC before vs after (paired, strata=subject)",58,0.0264,0.007

@@ -1,0 +1,9 @@
+{
+ "assay_samples": 132,
+ "metadata_samples": 130,
+ "kept": 130,
+ "dropped": [
+  "K_XYL_F_0009_03",
+  "K_XYL_F_0035_03"
+ ]
+}

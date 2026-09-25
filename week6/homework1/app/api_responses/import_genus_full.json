@@ -1,0 +1,41 @@
+{
+ "success": true,
+ "session_id": "jlRMRNfHbzrDVVBk2MC7gUBf",
+ "import_mode": "omics_add",
+ "experiment_name": "genus_full",
+ "samples": 130,
+ "features": 470,
+ "assay": "counts",
+ "omics": "microbiome_16s",
+ "experiment_count": 2,
+ "input_files": {
+  "data": {
+   "path": "C:/emp_hw6/inputs/16S_level-7_mapped130.csv",
+   "size": 179824,
+   "sha256": "3856c4524ca100e87237cbdc320ca0fde753f2cce4f2ed3c304682569df89863",
+   "rows_estimate": 411,
+   "rows_previewed": 100,
+   "columns": 131,
+   "orientation": "features_in_rows"
+  },
+  "metadata": {
+   "path": "C:/emp_hw6/inputs/16S_mapping.csv",
+   "size": 5566,
+   "sha256": "3983f3edddea76f728a92808b9a0c2f6de64511c37c46322949af32a6979b00c",
+   "rows_estimate": 133,
+   "rows_previewed": 130,
+   "columns": 3,
+   "sample_id_column": "SampleID"
+  }
+ },
+ "sample_overlap": {
+  "assay": 130,
+  "metadata": 130,
+  "matched": 130,
+  "assay_only": [],
+  "metadata_only": []
+ },
+ "warnings": [],
+ "backend_ms": 300.4,
+ "server_ts": "2026-09-25T12:13:49.757+0800"
+}

@@ -1,0 +1,14 @@
+samples joined: 130
+  Shannon   app vs R  Pearson r = 0.868  (n=130)  app median=1.624  R median=2.719
+  Simpson   app vs R  Pearson r = 0.852  (n=130)  app median=0.688  R median=0.871
+  Chao1     app vs R  Pearson r = 0.899  (n=130)  app median=22.000  R median=49.000
+  Observed  app vs R  Pearson r = 0.907  (n=130)  app median=22.000  R median=47.000
+  PCoA1 vs Axis1  Pearson r = 0.689
+  PCoA2 vs Axis2  Pearson r = 0.272
+  IBS_before_great vs IBS_before_poor        matched=  0 (too few)
+  IBS_before vs IBS_after                    matched=  0 (too few)
+  UC_before vs UC_after                      matched=  0 (too few)
+  IBS_before vs UC_before                    matched=  0 (too few)
+  edgeR IBS_before vs IBS_after  FDR<0.05 taxa: k__Bacteria;p__Verrucomicrobia;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Verrucomicrobiaceae;g__Akkermansia;s__muciniphila, k__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Lactobacillaceae;g__Lactobacillus;s__mucosae, k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Bifidobacteriales;f__Bifidobacteriaceae;g__Bifidobacterium;s__animalis
+  edgeR UC_before vs UC_after    FDR<0.05 taxa: k__Bacteria;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Clostridiaceae;g__SMB53;s__, k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Bifidobacteriales;f__Bifidobacteriaceae;__;__, k__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus;s__, k__Bacteria;p__Fusobacteria;c__Fusobacteriia;o__Fusobacteriales;f__Fusobacteriaceae;g__Fusobacterium;s__, k__Bacteria;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Lachnospiraceae;g__Coprococcus;s__eutactus
+  edgeR IBS_before vs UC_before  FDR<0.05 taxa: k__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Lactobacillaceae;g__Lactobacillus;s__mucosae, k__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus;s__, k__Bacteria;p__Firmicutes;c__Bacilli;o__Lactobacillales;f__Lactobacillaceae;g__Lactobacillus;s__zeae, k__Bacteria;p__Bacteroidetes;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella;s__, k__Bacteria;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Clostridiaceae;g__SMB53;s__

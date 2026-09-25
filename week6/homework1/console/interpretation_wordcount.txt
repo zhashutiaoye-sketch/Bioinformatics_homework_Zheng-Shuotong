@@ -1,0 +1,7 @@
+Interpretation word count check
+===============================
+requirement: 100-150 words (Week 6 reading material, 'One-Hour Homework' rubric, 20 points)
+counted:     133 words
+status:      OK
+
+Across 130 samples the bacterial community differed modestly but detectably by clinical group (Bray–Curtis PERMANOVA ~Group: R² = 0.047, p = 0.001), with dispersion indistinguishable between groups (p = 0.449), so the signal is a centroid shift rather than unequal spread. Treatment was associated with a compositional shift in UC (subject-blocked PERMANOVA: R² = 0.026, p = 0.007) but not in IBS (R² = 0.011, p = 0.132). Alpha diversity changed in no contrast; the largest movement was UC Shannon 2.86 → 2.39 (p = 0.055, BH p = 0.35). No taxon survived FDR control (Wilcoxon: 0 of 136), while an edgeR count model returned 3–5, so single-taxon markers remain method-dependent. Limitation: the design is observational, cohort is perfectly confounded with diagnosis, and relative 16S abundances cannot demonstrate absolute loss of any organism.

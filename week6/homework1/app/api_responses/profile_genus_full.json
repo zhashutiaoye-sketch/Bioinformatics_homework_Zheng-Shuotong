@@ -1,0 +1,23 @@
+{
+ "success": true,
+ "profile": {
+  "experiment": "genus_full",
+  "n_samples": 130,
+  "n_features": 137,
+  "taxonomy_separator": ";",
+  "max_taxonomy_depth": 1,
+  "observed_levels": [
+   137,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "backend_ms": 15.9,
+ "server_ts": "2026-09-25T12:13:50.128+0800"
+}

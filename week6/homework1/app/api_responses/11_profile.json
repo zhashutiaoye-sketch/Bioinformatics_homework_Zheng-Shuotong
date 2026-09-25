@@ -1,0 +1,23 @@
+{
+ "success": true,
+ "profile": {
+  "experiment": "microbiome16s",
+  "n_samples": 130,
+  "n_features": 470,
+  "taxonomy_separator": ";",
+  "max_taxonomy_depth": 7,
+  "observed_levels": [
+   470,
+   470,
+   470,
+   470,
+   470,
+   470,
+   470,
+   0,
+   0
+  ]
+ },
+ "backend_ms": 88.8,
+ "server_ts": "2026-09-25T12:12:22.396+0800"
+}

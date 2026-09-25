@@ -1,0 +1,338 @@
+# Week 6 Homework — 16S microbiome analysis with EasyMultiProfiler-Web
+
+Student: 郑烁曈 (SUAT24000155) · Date: 2026-09-25 · App: EasyMultiProfiler (Web) v9.0.4
+App session: `jlRMRNfHbzrDVVBk2MC7gUBf` · experiments `microbiome16s` (one-click run) and `genus_full`
+(deep run) · official one-click bundle `20260925-121232.zip`
+
+Task as set in `Homework-Week6.docx`: *(1)* run the **whole analysis procedure** on the 16S data files in
+`EasyMultiProfiler-Web/tests` with EMP-web and submit the final result through the EMP-web system;
+*(2)* **generate a scientific hypothesis from the parameters and results**, stating which parameters support it.
+
+---
+
+## 1. Data identified in `EasyMultiProfiler-Web/tests`
+
+| File | Content |
+|---|---|
+| `16S_level-7.csv` | 470 features (level-7 taxonomy strings, `;`-separated, `k__…;p__…;c__…;o__…;f__…;g__…;s__…`) × 132 library columns; first column `SampleID` |
+| `16S_mapping.csv` | 130 rows: `SampleID`, `Group` (4 levels: `IBS_before`, `IBS_after`, `UC_before`, `UC_after`), `Group_sub` (8 levels = cohort × visit × response `great`/`poor`) |
+| `ChIP/HA_summits_0.05.bed`, `Clinical*.csv`, `meta-*.csv`, `RNAseq_*.csv` | not used — the assignment names the **16S** files |
+
+Design decoded from the identifiers (documented, then used throughout):
+
+* cohort — `J_…` = IBS (72 libraries), `K_…` = UC (58 libraries);
+* visit — `…_01` = before treatment, `…_02` = after treatment. Two samples are written `…_2`
+  (`J_XYL_F_0042_2`, `J_XYL_F_0043_2`), so the visit label is taken from the `Group` column, not from a
+  string pattern;
+* response — `Group_sub` suffix: `great` (responder) vs `poor` (non-responder);
+* subject — sample ID without the visit suffix, so **before/after pairs are matched within patient**.
+
+**QC decision taken before analysis (and the first real finding).** The count table has 132 libraries but the
+metadata only 130; `K_XYL_F_0009_03` and `K_XYL_F_0035_03` have **no group label**. EMP's differential step
+refuses a grouping column that contains `NA` (*"Column Group has beed deteced missing value"*), and that
+failure is silent inside the one-click pipeline (see §3). The two unlabelled libraries were therefore
+excluded **at import** (`data/16S_level-7_mapped130.csv`, derived by `scripts/prep_inputs.py`; the untouched
+original is kept as `data/16S_level-7_original_132samples.csv`). All numbers below are for the 130-sample
+table unless stated otherwise.
+
+---
+
+## 2. Part 1 — the complete analysis procedure through EMP-web
+
+The web UI's HTTP API is the same code path its buttons call, so the analysis was driven through it
+(the UI was not clicked because port 8000 is occupied on this machine by another local program; the API was
+started on 127.0.0.1:8010 with `EMP_ALLOWED_ROOTS=C:/emp_hw6`). Every call, parameter and raw response is
+kept under `app/api_responses/` and listed in `app/api_call_log.md`.
+
+Sequence actually executed (UI equivalent in brackets):
+
+1. `POST /api/session` → session `jlRMRNfHbzrDVVBk2MC7gUBf`.
+2. `POST /api/import/path` *(Data → Import)* with `data_type="tax"`, `assay_name="counts"`,
+   `start_level="Species"`, `tax_sep=";"` → 130 samples × 470 features, `sample_overlap.matched = 130/130`,
+   no warnings.
+3. `POST /api/workflows/microbiome_16s/profile` and `/validate` → checks `has_features`, `has_samples`,
+   `taxonomy_depth_ok` all true, `max_taxonomy_depth = 7`.
+4. `POST /api/workflows/microbiome_16s/run_all` *(the one-click 16S button)* with
+   `group_var="Group"`, `taxonomy_level="Genus"`, `alpha_index="shannon"`, `beta_method="bray"`,
+   `ord_method="PCoA"` → background job, 6 steps, 31.3 s, packaged by the app into
+   `bundles/20260925-121232.zip` (3.7 MB, downloaded to `app_run_bundle/run2_analysis_130samples/`).
+5. Deep run in the same session: a second experiment (`genus_full`) imported and collapsed
+   (`POST /api/workflows/microbiome_16s/prepare/taxonomy`, `collapse_level="Genus"`, `keep_top_n=0`,
+   `drop_unassigned=false`) → 470 → **137 genus-level features**;
+   then `POST /api/analyze/alpha` (all 7 indices), `POST /api/analyze/dimension`
+   (PCA, PCoA, NMDS), **10** `POST /api/analyze/differential` contrasts, and the visualization endpoints
+   (alpha, scatter, heatmap, barplot, structure, sankey, network, volcano).
+6. Submission: `POST /api/github/sync` *(Export → Sync)* — see §7.
+
+**What the app's own one-click run produced** (`app_run_bundle/run2_analysis_130samples/`):
+
+| Output | File | Note |
+|---|---|---|
+| alpha boxplots, 7 indices | `plots/02_alpha_{shannon,simpson,invsimpson,chao1,ace,observed,pielou}_boxplot.{png,pdf}` | Wilcoxon annotation between groups |
+| ordinations | `plots/03_beta_{pcoa,pca,nmds}_scatter.{png,pdf}` | PCoA/PCA/NMDS on Bray–Curtis |
+| top-40 variable heatmap | `plots/04_top40_heatmap.{png,pdf}` | z-scored, group annotation bar |
+| top-15 barplot | `plots/04_top15_barplot.{png,pdf}` | mean relative abundance |
+| alpha indices table | `tables/02_alpha_indices.csv` | 130 rows × 7 indices |
+| beta coordinates | `tables/03_beta_coords.csv` | PCoA/PCA/NMDS coordinates |
+| differential taxa | `tables/05_diff_taxa.csv` | 40 rows (taxa of the collapsed top-40 table) |
+| run log | `summary.txt` | per-step status and timings |
+
+App-side extra figures for this report are in `figures/` (`alpha_*`, `scatter_*`, `heatmap_*`,
+`barplot_top20`, `structure_top10`, `sankey_phylum_genus`, `network_spearman`, `volcano`).
+Interface parameters used for them: group = `Group` (or `Group_sub`), top_n = 15–40, network = Spearman
+`cutoff = 0.6`, sankey = Phylum → Genus, volcano = `fc_cutoff 1.0 / p_cutoff 0.05`.
+
+---
+
+## 3. What the app/data did that had to be corrected (verified, with evidence)
+
+1. **The one-click 16S pipeline silently loses the differential-taxa table when the count table has
+   libraries without metadata.** First run on the file *as provided* (132 libraries) produced a bundle with
+   only 2 of 4 tables (`app_run_bundle/run1_raw_import_132samples/`): `summary.txt` logs
+   `Diff taxa 0.22s ok`, yet no `05_diff_taxa.*` is written, because the internal call fails and is caught.
+   Re-running the same endpoint by hand returns the cause explicitly:
+   `POST /api/analyze/differential` → `{"success":false,"error":"Differential analysis failed: Column Group
+   has beed deteced missing value, please check and filter them!"}`. After the 130-sample QC subset the step
+   takes 19 s and `tables/05_diff_taxa.csv` exists. *Reported here because a student following only the
+   green log would submit a bundle whose differential analysis never ran.*
+2. **Taxonomic collapse labels are not interpretable without the original string.** Collapsing to "Genus"
+   with `drop_unassigned=false` keeps an aggregate feature literally named `__` (all unassigned reads) plus
+   labels such as `s__`, `s__ramosum`, `s__muciniphila` — i.e. the deepest *assigned* rank is used, so a
+   "genus-level" table still carries species epithets and one `NA`-like bucket. All feature names in this
+   report were therefore re-derived from the level-7 strings (`scripts/hw6_16s_verify.R`, readable labels
+   such as `Akkermansia muciniphila`, `unclassified f:Clostridiaceae`).
+3. **The interactive heatmap button needs `pheatmap`, which was not installed**, so
+   `POST /api/visualize/heatmap` returned `Package 'pheatmap' is required for heatmap.` — while the
+   *one-click* heatmap (a ggplot-based implementation) worked. Installed `pheatmap` into
+   `D:/R/R-userlib`; the button then produced `figures/heatmap_top40.png` (group annotation bar present,
+   but **no taxon labels and no colour legend** — the one-click heatmap in the bundle is the more
+   informative one).
+4. **EMP ordination cache is invalidated by later analyses.** `POST /api/visualize/scatter` with
+   `ordination="emp"` returned *"No usable EMP dimension coordinates… run Analysis > Dimension first"*
+   although `POST /api/analyze/dimension` had just been run; the request only succeeded when the dimension
+   analysis was repeated immediately before the plot. `ordination="auto"` silently falls back to a **PCA of
+   the raw assay (Euclidean)**, e.g. `scatter_auto_Group.png` (`PC1 42.5 %`, `PC2 29.8 %`): for a
+   compositional count table that is the data state the Week 6 reading material explicitly warns against
+   ("Bray–Curtis PCoA: a task-justified transformed or rarefied feature table"). The Bray–Curtis PCoA
+   (`scatter_emp_Group.png`, `PCoA1 27.2 %`, `PCoA2 19.1 %`) or the bundle's `03_beta_pcoa_scatter.png`
+   is the defensible ordination for this dataset.
+5. **Bundle tables are written as `.csv` while the code asks for `.xlsx`** (`openxlsx` absent, `writexl`
+   present, fallback path taken). Harmless, but the file names in the bundle differ from the app's docs.
+6. Two libraries (`K_XYL_F_0009_03`, `K_XYL_F_0035_03`) exist only in the count table, and three sample IDs
+   use `_03` while the rest use `_01/_02`; `16S_mapping.csv` covers 130 of the 132 libraries. A pipeline
+   that joins assay and metadata without an explicit overlap report would analyse `NA`-labelled samples.
+
+---
+
+## 4. Part 2 — independent verification in plain R
+
+`scripts/hw6_16s_verify.R` (runs from a clean session, identity checks and comments in the script,
+`sessionInfo()` at the end) re-answers every question of the app analysis on the rarefied species-level
+table, so each number in this report exists twice: once from the app and once from an independent
+implementation. Console transcript: `console/hw6_16s_verify_console.txt`.
+
+Pipeline and parameters: identity/orientation checks → read-depth QC → prevalence filter
+(prevalence ≥ 10 % and ≥ 20 reads total: **136 of 470 taxa**) → rarefaction to the smallest library depth
+(**1,624 reads**, `vegan::rrarefy`, seed 20260925) → alpha (observed, Shannon, Simpson, inverse Simpson,
+Pielou, Chao1, ACE) → Bray–Curtis distance (`vegan::vegdist`) → PCoA (`vegan::wcmdscale`, Lingoes) →
+PERMANOVA (`vegan::adonis2`, 999 permutations, subject-blocked permutations for the paired before/after
+contrasts) → dispersion (`vegan::betadisper` + `permutest`) → differential taxa (Wilcoxon on relative
+abundance + BH; `edgeR::exactTest` on raw counts as a method-sensitivity check) → figures.
+
+**Summary table** (`tables/r_summary_table.csv`, the rubric's "sample depth, retained ASVs, Shannon,
+PERMANOVA, dispersion"):
+
+| Item | Value |
+|---|---|
+| Samples analysed (with metadata) | 130 (72 IBS, 58 UC libraries; 65 baseline / 65 post; 68 responders / 62 non-responders) |
+| Features (as provided → retained) | 470 level-7 taxa → 136 (prevalence ≥ 10 %, ≥ 20 reads) |
+| Reads per library (median; min–max) | 10,197; 1,624–20,283 |
+| Rarefaction depth used | 1,624 reads (all libraries equal) |
+| Shannon (median, all samples) | 2.72 |
+| Shannon IBS before / after | 3.07 / 3.01 |
+| Shannon UC before / after | 2.86 / 2.39 |
+| PERMANOVA ~ Group | R² = 0.047, p = 0.001 |
+| PERMANOVA ~ Group + response | Group R² = 0.053, p = 0.002 |
+| PERMANOVA baseline IBS great vs poor | R² = 0.017, p = 0.868 |
+| PERMANOVA baseline UC great vs poor | R² = 0.021, p = 0.978 |
+| Dispersion test (Group) | F = 0.86, p = 0.449 (no detectable heterogeneity difference) |
+| Differential taxa BH-FDR < 0.05 (baseline great vs poor; IBS / UC) | 0 / 0 |
+
+Full tables: `tables/r_permanova.csv`, `r_dispersion_tests.csv`, `r_alpha_tests.csv`,
+`r_diff_taxa_wilcoxon.csv`, `r_diff_taxa_edgeR_sensitivity.csv`, `r_pcoa_coords.csv`.
+
+**Alpha-diversity figure** (`figures/r_alpha_diversity.png`) — individual points + box summaries for
+observed richness, Shannon and Chao1 per group. No contrast reaches BH < 0.05; the largest movement is the
+UC cohort falling from Shannon 2.86 to 2.39 after treatment (raw p = 0.055, BH p = 0.35), while IBS is flat
+(3.07 → 3.01).
+
+**Bray–Curtis PCoA** (`figures/r_pcoa_bray_curtis.png`; axis labels carry the variance explained,
+PCoA1 10.0 % / PCoA2 6.4 % of the rarefied table, 68 % ellipses, colour = group, shape = response);
+`figures/r_pcoa_baseline_response.png` restricts the same ordination to baseline samples and facets by
+cohort for the hypothesis; `figures/r_dispersion.png` shows the distance-to-centroid diagnostic;
+`figures/r_phylum_composition.png` is the descriptive top-10 phyla + Other composition (explicitly *not* a
+test); `figures/r_top_diff_taxa_baseline.png` shows the strongest (unadjusted) baseline taxa.
+
+**Agreement between the app and the independent R run** (`console/app_vs_r_agreement.txt`):
+
+| Comparison | Result |
+|---|---|
+| Alpha indices, app `genus_full` vs R rarefied table | Pearson r = 0.87 (Shannon), 0.85 (Simpson), 0.90 (Chao1), 0.91 (observed) |
+| Absolute level of the same indices | app median Shannon 1.62 / observed 22 vs R 2.72 / 47 — the app computes them **after** the genus collapse (137 features), the R script on 470 level-7 features; diversity values are not comparable across taxonomic ranks |
+| PCoA1 app vs R | r = 0.69 (PCoA2 only 0.27) — different data state (app: relative abundance of the collapsed, non-rarefied table; R: rarefied species table) |
+| Differential taxa | app and R agree that **0** taxa reach FDR < 0.05 in every two-group contrast; `edgeR` on raw counts returns 3–5 taxa for the same contrasts → the difference is method-driven, not implementation-driven |
+| Qualitatively identical conclusions | group effect significant but small; no responder/non-responder signal at baseline; UC (not IBS) shifts after treatment |
+
+---
+
+## 5. What the numbers actually say
+
+* **Group structure is real but small.** Bray–Curtis PERMANOVA: `~ Group` R² = 0.047, p = 0.001 (999 free
+  permutations); `~ Group_sub` R² = 0.070, p = 0.024; baseline IBS vs UC R² = 0.026, p = 0.047. Dispersion is
+  statistically indistinguishable at every level tested (Group p = 0.449; UC before/after p = 0.799), so
+  these are **centroid shifts, not differences in within-group heterogeneity** — the pair of diagnostics the
+  Week 6 reading material requires ("report PERMANOVA together with the dispersion diagnostic").
+* **Treatment moves the UC community, not the IBS community.** Paired PERMANOVA with subject-blocked
+  permutations: UC before vs after R² = 0.026, **p = 0.007** (58 libraries, 29 patients); IBS R² = 0.011,
+  p = 0.132 (72 libraries, 36 patients). Consistent with the alpha-diversity trend in UC only.
+* **No single taxon is robust.** Wilcoxon + BH on relative abundance: 0 of 136 taxa at FDR < 0.05 in all
+  seven contrasts (smallest raw p = 0.003 for IBS before vs after → BH 0.24). `edgeR` on raw counts flags
+  3–5 taxa; the app's own differential tables also contain nothing at FDR < 0.05. Reported as a
+  method-disagreement, not as a taxon list ("no differential-abundance method is universally best", Week 6
+  reading material). Compositional caveat: 16S counts are relative, so a detected "decrease" cannot be read
+  as absolute loss.
+* **Baseline community structure does not separate responders from non-responders.** great vs poor at
+  baseline: IBS R² = 0.017, p = 0.868; UC R² = 0.021, p = 0.978; alpha-diversity Mann–Whitney tests all
+  BH ≥ 0.61; no taxon at FDR < 0.05.
+
+### Interpretation (100–150 words — word count checked programmatically)
+
+> Across 130 samples the bacterial community differed modestly but detectably by clinical group
+> (Bray–Curtis PERMANOVA ~Group: R² = 0.047, p = 0.001), with dispersion indistinguishable between groups
+> (p = 0.449), so the signal is a centroid shift rather than unequal spread. Treatment was associated with a
+> compositional shift in UC (subject-blocked PERMANOVA: R² = 0.026, p = 0.007) but not in IBS (R² = 0.011,
+> p = 0.132). Alpha diversity changed in no contrast; the largest movement was UC Shannon 2.86 → 2.39
+> (p = 0.055, BH p = 0.35). No taxon survived FDR control (Wilcoxon: 0 of 136), while an edgeR count model
+> returned 3–5, so single-taxon markers remain method-dependent. Limitation: the design is observational,
+> cohort is perfectly confounded with diagnosis, and relative 16S abundances cannot demonstrate absolute
+> loss of any organism.
+
+---
+
+## 6. Part 2 of the assignment — scientific hypothesis with its supporting parameters
+
+**Hypothesis.** *Treatment restructures the gut bacterial community in ulcerative colitis but not in IBS,
+and that restructuring is a community-level shift in composition (centroid) rather than a change in
+within-group heterogeneity or in one marker taxon. A microbiome-based read-out of treatment response should
+therefore be defined as a within-patient change metric (pre → post) in UC, and cannot be built from baseline
+community structure alone.*
+
+**Parameters that support the hypothesis** (this is the explicit list the assignment asks for — every value
+is in `tables/` and reproducible from `scripts/`):
+
+| Kind of parameter | Value used | Role in the hypothesis |
+|---|---|---|
+| Beta-diversity distance + data state | Bray–Curtis on rarefied counts (1,624 reads/taxa ≥ 10 % prevalence, 136 taxa) | abundance-weighted, non-phylogenetic dissimilarity; the change is in relative composition |
+| Ordination parameters | PCoA of that distance matrix; PCoA1 10.0 % / PCoA2 6.4 % (app EMP PCoA: 27.2 % / 19.1 % of the collapsed table) | visualises the same distance matrix; **no inference is taken from the plot itself** |
+| PERMANOVA + permutation scheme | `adonis2(bray ~ Group)`, 999 permutations, R² = 0.047, p = 0.001; `~ Group_sub` R² = 0.070, p = 0.024 | group explains ≈ 5 % of variation — real, small |
+| Restricted (paired) permutation | `adonis2(bray ~ visit)`, permutations blocked by subject: UC R² = 0.026, p = 0.007; IBS R² = 0.011, p = 0.132 | the treatment shift is cohort-specific — the core of the hypothesis |
+| Dispersion diagnostic | `betadisper` + `permutest`: Group F = 0.86, p = 0.449; UC before/after p = 0.799 | the effect is a centroid, not a dispersion, effect |
+| Alpha-diversity metrics (+ rank & rarefaction state) | Shannon, Chao1, observed at species level, rarefied; Mann–Whitney + BH: all BH ≥ 0.35; UC Shannon 2.86 → 2.39, raw p = 0.055 | richness/evenness alone do not track treatment; the trend supports "composition without loss of richness" |
+| Differential-abundance method + multiple testing | Wilcoxon on relative abundance + BH (0/136 at FDR < 0.05); `edgeR` exact test (3–5 taxa) | no robust single taxon → the hypothesis is compositional, not taxon-specific |
+| Baseline grouping parameters | `Group_sub` great vs poor at baseline: PERMANOVA R² = 0.017 (IBS) / 0.021 (UC), p = 0.868 / 0.978; alpha BH ≥ 0.61 | baseline structure does **not** predict response — rules out the obvious alternative hypothesis |
+| Sample/pairing parameters | 130 libraries, 4 groups, 8 subgroups, patient-matched before/after | defines what "within-patient change" means |
+
+**Predictions that would falsify it** (observational data cannot test them here):
+with spike-in-quantified (absolute) profiling in a paired cohort, (i) the within-patient Bray–Curtis change
+should be larger in UC than in IBS, (ii) longitudinal models (ANCOM-BC2 / MaAsLin 3) should return
+cross-cohort-consistent taxa, and (iii) a baseline-only classifier for response should stay at chance level.
+
+**Causal ladder position.** This is evidence for *description* and, at best, *association*: the data are
+observational, treatment was not assigned, cohort is confounded with diagnosis, and no perturbation or
+rescue experiment was performed. No patient-level, diagnostic or therapeutic claim is made.
+
+---
+
+## 7. Submission through the EMP-web system
+
+`POST /api/github/sync` was used (the Export/Sync button), with
+`track_id="microbiome_16s"`, `assignment_id="week_06"` (the 16S track's 第6周 slot),
+`session_id="jlRMRNfHbzrDVVBk2MC7gUBf"`, `experiment="genus_full"`, `commit_message` and
+`include_rds=false`. The app's handler writes the run into the student's bound repository
+`zhashutiaoye-sketch/Bioinformatics_homework_Zheng-Shuotong` under
+`EMP2026/Week_06/microbiome_16s/weekly/runs/<run_id>/` and appends the entry to the local sync log
+(`.local_run/data/students/SUAT24000155/sync_log.jsonl`). The exact request/response is stored as
+`app/api_responses/20_github_sync.json`; the pushed paths are listed in that response and were verified
+against the repository afterwards.
+
+Independently of the app's push, the same `homework1/` folder is mirrored into the course repository for
+this week (see the week-level `README.md`), so both channels contain identical artifacts.
+
+---
+
+## 8. Figures (files in `figures/`)
+
+**Independent R analysis** — alpha diversity with individual points, Bray–Curtis PCoA with axis variance and
+dispersion diagnostic:
+
+![Alpha diversity by clinical group](figures/r_alpha_diversity.png)
+
+![Bray-Curtis PCoA, 130 samples](figures/r_pcoa_bray_curtis.png)
+
+![Baseline samples: responder vs non-responder within each cohort](figures/r_pcoa_baseline_response.png)
+
+![Within-group dispersion (betadisper)](figures/r_dispersion.png)
+
+![Top-10 phyla composition (descriptive)](figures/r_phylum_composition.png)
+
+![Strongest (unadjusted) baseline taxa](figures/r_top_diff_taxa_baseline.png)
+
+**App-generated** — the EMP Bray–Curtis PCoA (`ordination="emp"`), the app's default ordination
+(`ordination="auto"`: Euclidean PCA of the raw assay, *not* the right data state), the top-40 heatmap, the
+sankey and the Spearman network:
+
+![EMP Bray-Curtis PCoA](figures/scatter_emp_Group.png)
+
+![App default ordination: Euclidean PCA of the raw assay](figures/scatter_auto_Group.png)
+
+![Top-40 variable features, z-scored (app heatmap)](figures/heatmap_top40.png)
+
+![Phylum to Genus sankey](figures/sankey_phylum_genus.png)
+
+![Spearman taxa correlation network](figures/network_spearman.png)
+
+Budgeted display versions of the app's own one-click plots (with axis titles and PDFs) are in
+`app_run_bundle/run2_analysis_130samples/plots/`.
+
+## 9. Deliverable map (Week 6 reading-material rubric)
+
+| Rubric item | Where it is |
+|---|---|
+| R script, runs from a clean session, identity checks + comments | `scripts/hw6_16s_verify.R` (+ `console/r_rerun_stdout.txt`, `console/hw6_16s_verify_console.txt`) |
+| Summary table (depth, retained features, Shannon, PERMANOVA, dispersion) | `tables/r_summary_table.csv` (+ §4 table) |
+| Alpha-diversity figure, points + group summary + test | `figures/r_alpha_diversity.png`, tests in `tables/r_alpha_tests.csv` |
+| Bray–Curtis PCoA with interpretable axes | `figures/r_pcoa_bray_curtis.png`, `figures/r_pcoa_baseline_response.png`, `figures/r_dispersion.png` |
+| Interpretation 100–150 words | §5 above (`console/interpretation_wordcount.txt`) |
+| AI verification log + `sessionInfo()` | `AI_verification_log.md`, `console/hw6_16s_verify_console.txt` |
+| EMP-web "complete analysis procedure" + submission | §2, §7, `app_run_bundle/`, `app/api_responses/`, `app/api_call_log.md` |
+| Hypothesis + supporting parameters | §6 |
+
+## 10. Reproduction
+
+```
+# 1) app analysis (see scripts/README_app_run.md for the full launch line)
+cd C:/Users/郑烁曈/EasyMultiProfiler-Web
+R_LIBS_USER=D:/R/R-userlib API_HOST=127.0.0.1 API_PORT=8010 EMP_ALLOWED_ROOTS=C:/emp_hw6 \
+  Rscript --vanilla webapp/backend/run_api.R
+D:/python/python.exe homework1/scripts/prep_inputs.py     # 132 -> 130 samples (QC)
+D:/python/python.exe homework1/scripts/stepA_official.py  # session, import, one-click run, bundle
+D:/python/python.exe homework1/scripts/stepB_deep.py Genus # collapse, alpha, ordination, 10 contrasts
+D:/python/python.exe homework1/scripts/stepC_appplots.py  # app figures
+# 2) independent verification + figures + summary table
+cd homework1/scripts
+R_LIBS_USER=D:/R/R-userlib Rscript --vanilla hw6_16s_verify.R
+```
+
+Environment: R 4.4.3 (`D:/R/R-4.4.3`), libraries `D:/R/R-userlib` (vegan 2.7-3, ggplot2 4.0.3,
+edgeR 4.4.2, ragg 1.5.2), Python 3.11 (`D:/python/python.exe`), EasyMultiProfiler (Web) v9.0.4.
+Full `sessionInfo()` at the end of `console/hw6_16s_verify_console.txt`.

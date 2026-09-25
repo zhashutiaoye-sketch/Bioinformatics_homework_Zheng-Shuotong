@@ -1,0 +1,19 @@
+=== import experiment genus_full ===
+  samples=130 features=470 overlap=130
+  collapse genus_full -> Genus: 137 features (from 470)
+  profile: {"experiment": "genus_full", "n_samples": 130, "n_features": 137, "taxonomy_separator": ";", "max_taxonomy_depth": 1, "observed_levels": [137, 0, 0, 0, 0, 0, 0, 0, 0]}
+  alpha rows=130 columns=['primary', 'shannon', 'simpson', 'invsimpson', 'observerd_index', 'chao1', 'ACE', 'pielou', 'observed']
+  dimension PCA rows=130 cols=['primary', 'PC1', 'PC2', 'PC3']
+  dimension PCoA rows=130 cols=['primary', 'PCoA1', 'PCoA2', 'PCoA3']
+  dimension NMDS rows=0 cols=None
+=== differential contrasts (genus_full) ===
+  genus_full_IBS_before_vs_IBS_after n= 56  fdr<0.05:  0  
+  genus_full_UC_before_vs_UC_after   n= 54  fdr<0.05:  0  
+  genus_full_IBS_before_vs_UC_before n= 57  fdr<0.05:  0  
+  genus_full_IBS_after_vs_UC_after   n= 53  fdr<0.05:  0  
+  genus_full_IBS_before_great_vs_poor n= 54  fdr<0.05:  0  
+  genus_full_IBS_after_great_vs_poor n= 60  fdr<0.05:  0  
+  genus_full_UC_before_great_vs_poor n= 57  fdr<0.05:  0  
+  genus_full_UC_after_great_vs_poor  n= 54  fdr<0.05:  0  
+  genus_full_Group_all               n= 55  fdr<0.05:  0  
+  genus_full_Group_sub_all           n= 55  fdr<0.05:  0  

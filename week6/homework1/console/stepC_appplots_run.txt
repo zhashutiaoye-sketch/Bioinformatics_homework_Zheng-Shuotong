@@ -1,0 +1,22 @@
+== alpha diversity plots (one per index, by Group) ==
+  alpha_shannon                      OK    169362 bytes
+  alpha_simpson                      OK    178044 bytes
+  alpha_invsimpson                   OK    174421 bytes
+  alpha_chao1                        OK    177995 bytes
+  alpha_ace                          OK    138067 bytes
+  alpha_observed                     OK    185305 bytes
+  alpha_pielou                       OK    172049 bytes
+  alpha_shannon_Group_sub            OK    200209 bytes
+== ordination ==
+  scatter_auto_Group                 OK    464280 bytes
+  scatter_emp_Group                  FAIL {"http_error": 500, "body": "{\"success\":false,\"error\":\"No usable EMP dimension coordinates for this experiment (run Analysis > Dimension first, or coordinates are out of date after filtering/coll
+  scatter_assay_pca_Group            OK    464280 bytes
+  scatter_auto_Group_sub             OK    512806 bytes
+== composition / abundance ==
+  heatmap_top40                      FAIL {"http_error": 400, "body": "{\"success\":false,\"error\":\"Package 'pheatmap' is required for heatmap.\",\"backend_ms\":108.7,\"server_ts\":\"2026-09-25T12:25:40.255+0800\"}"}
+  barplot_top20                      OK    167349 bytes
+  structure_top10                    OK    548647 bytes
+  sankey_phylum_genus                OK     52914 bytes
+  network_spearman                   OK    132115 bytes
+  volcano                            OK    138946 bytes
+done -> C:/emp_hw6/out\app_plots
